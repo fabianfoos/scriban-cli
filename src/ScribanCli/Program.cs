@@ -22,24 +22,29 @@ namespace ScribanCli
         {
             var source = File.ReadAllText(options.TemplateFile);
             var template = Template.Parse(source, options.TemplateFile);
+            var fg = Console.ForegroundColor;
             if (template.Messages.Count > 0)
             {
                 foreach (var item in template.Messages)
                 {
-                    Console.WriteLine($"{item.Type}: {item.Message}.");
-                    Console.WriteLine($"At {item.Span.FileName}: Line {item.Span.Start.Line + 1}, Column {item.Span.Start.Column + 1}");
+                    Console.ForegroundColor = item.Type == Scriban.Parsing.ParserMessageType.Error ? ConsoleColor.Red : ConsoleColor.Yellow;
+                    Console.Error.WriteLine($"{item.Type}: {item.Message}.");
+                    Console.Error.WriteLine($"At {item.Span.FileName}: Line {item.Span.Start.Line + 1}, Column {item.Span.Start.Column + 1}");
                     var start = source.LastIndexOf('\n', item.Span.Start.Offset);
                     start = start == -1 ? 0 : start;
                     var end = source.IndexOf('\n', item.Span.Start.Offset);
                     end = end == -1 ? source.Length : end;
-                    Console.WriteLine(source[start..end]);
-                    Console.WriteLine("^".PadLeft(item.Span.Start.Column + 1));
+                    Console.Error.WriteLine(source[start..end]);
+                    Console.Error.WriteLine("^".PadLeft(item.Span.Start.Column + 1));
                 }
             }
 
+            Console.ForegroundColor = fg;
             if (template.HasErrors)
             {
-                Console.WriteLine("Error parsing template.");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Error.WriteLine("Error parsing template.");
+                Console.ForegroundColor = fg;
                 return;
             }
 
@@ -61,15 +66,18 @@ namespace ScribanCli
             }
             catch (ScriptRuntimeException ex)
             {
-                Console.WriteLine(ex.OriginalMessage);
-                Console.WriteLine($"At {ex.Span.FileName}: Line {ex.Span.Start.Line + 1}, Column {ex.Span.Start.Column + 1}");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Error.WriteLine(ex.OriginalMessage);
+                Console.Error.WriteLine($"At {ex.Span.FileName}: Line {ex.Span.Start.Line + 1}, Column {ex.Span.Start.Column + 1}");
                 var start = source.LastIndexOf('\n', ex.Span.Start.Offset);
                 start = start == -1 ? 0 : start;
                 var end = source.IndexOf('\n', ex.Span.Start.Offset);
                 end = end == -1 ? source.Length : end;
-                Console.WriteLine(source[start..end]);
-                Console.WriteLine("^".PadLeft(ex.Span.Start.Column + 1));
+                Console.Error.WriteLine(source[start..end]);
+                Console.Error.WriteLine("^".PadLeft(ex.Span.Start.Column + 1));
             }
+
+            Console.ForegroundColor = fg;
         }
 
         private static IScriptObject BuildModel(JsonElement model)
