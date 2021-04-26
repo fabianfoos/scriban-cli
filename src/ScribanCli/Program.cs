@@ -52,8 +52,11 @@ namespace ScribanCli
             context.TemplateLoader = new TemplateLoader();
             var filetools = new ScriptObject();
             filetools.Import(typeof(FileTools));
+            var consoletools = new ScriptObject();
+            consoletools.Import(typeof(ConsoleTools));
             var tools = new ScriptObject();
             tools.Add("file", filetools);
+            tools.Add("console", consoletools);
             context.PushGlobal(tools);
             var model = JsonSerializer.Deserialize<JsonElement>(options.JsonInput.ReadToEnd());
             context.PushGlobal(BuildModel(model));
@@ -94,7 +97,10 @@ namespace ScribanCli
                 case JsonValueKind.False:
                     return false;
                 case JsonValueKind.Number:
-                    return 0;
+                    if (model.TryGetInt64(out var longValue))
+                        return longValue;
+                    else
+                        return model.GetDecimal();
                 case JsonValueKind.Object:
                     var scriptObject = new ScriptObject();
                     foreach (var item in model.EnumerateObject())

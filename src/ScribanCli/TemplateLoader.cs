@@ -10,7 +10,7 @@ namespace ScribanCli
     {
         public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName)
         {
-            return templateName;
+            return Path.Combine(new FileInfo(context.CurrentSourceFile).DirectoryName, templateName);
         }
 
         public string Load(TemplateContext context, SourceSpan callerSpan, string templatePath)

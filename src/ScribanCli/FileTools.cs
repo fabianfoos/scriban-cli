@@ -6,6 +6,7 @@ namespace ScribanCli
     {
         public static void Write(string filename, string content)
         {
+            new FileInfo(filename).Directory.Create();
             File.WriteAllText(filename, content);
         }
 
