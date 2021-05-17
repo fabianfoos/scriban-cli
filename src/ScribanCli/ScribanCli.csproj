@@ -8,7 +8,7 @@
     <ToolCommandName>scribancli</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <PackageId>scribancli</PackageId>
-    <Version>0.4.1</Version>
+    <Version>0.4.2</Version>
     <Authors>Fabián Foos</Authors>
     <PackageTags>net;scriban;template;templates</PackageTags>
     <Description>Scriban CLI tool text templating</Description>
@@ -18,11 +18,12 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageProjectUrl>https://github.com/fabianfoos/scriban-cli</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="Scriban" Version="3.6.0" />
+    <PackageReference Include="Scriban" Version="3.7.0" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
   </ItemGroup>
 

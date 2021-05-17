@@ -49,6 +49,7 @@ namespace ScribanCli
             }
 
             var context = new TemplateContext();
+            context.LoopLimit = options.LoopLimit;
             context.TemplateLoader = new TemplateLoader();
             var filetools = new ScriptObject();
             filetools.Import(typeof(FileTools));

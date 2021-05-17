@@ -37,5 +37,8 @@ namespace ScribanCli
                     return new StreamReader(JsonFile);
             }
         }
+
+        [Option('l', "loop-limit", HelpText = "Loop limit.", Required = false, Default = 1000)]
+        public int LoopLimit { get; set; }
     }
 }
